@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pricetracker/util/strings.dart';
 import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../viewmodel/gold_rate_viewmodel.dart';
@@ -13,8 +14,6 @@ class ChartScreen extends StatefulWidget {
 }
 
 class _ChartScreenState extends State<ChartScreen> {
-  // We need a stateful widget to manage the touchedSpot for the tooltip
-
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<GoldRateViewModel>(context);
@@ -32,44 +31,36 @@ class _ChartScreenState extends State<ChartScreen> {
         backgroundColor: const Color(0xFFF9F6F1),
         elevation: 0,
         title: Text(
-          // Dynamic title based on metal type
-          '${viewModel.metalType == 'gold' ? 'Gold' : 'Silver'} Price Trends',
+          '${viewModel.metalType == AppStrings.goldValue ? AppStrings.gold : AppStrings.silver} ${AppStrings.priceTrends}',
           style: const TextStyle(
             fontSize: 26,
             fontWeight: FontWeight.bold,
             color: Colors.black,
           ),
         ),
-        centerTitle: false, // Align title to left
+        centerTitle: false,
       ),
       body: SafeArea(
         child: Column(
-          // Using Column instead of CustomScrollView for simpler structure
           children: [
-            // --- Sticky Filter Buttons (no longer in a SliverPersistentHeader) ---
             Container(
               color: const Color(0xFFF9F6F1),
-              child: const FilterButtons(
-                showSortFilter: false,
-              ), // No sort filter here
+              child: const FilterButtons(showSortFilter: false),
             ),
 
-            // --- Chart Area or Loading/No Data Message ---
             Expanded(
-              // Use Expanded to fill remaining vertical space
               child:
                   viewModel.isLoading
                       ? const Center(child: CircularProgressIndicator())
                       : entries.isEmpty
                       ? const Center(
                         child: Text(
-                          'No data available for the selected range or metal type.\nTry adjusting filters.',
+                          AppStrings.noData,
                           style: TextStyle(color: Colors.grey, fontSize: 16),
                           textAlign: TextAlign.center,
                         ),
                       )
                       : SingleChildScrollView(
-                        // Add SingleChildScrollView if content might overflow
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(
                             16.0,
@@ -96,9 +87,8 @@ class _ChartScreenState extends State<ChartScreen> {
                               aspectRatio: 1.5,
                               child: LineChart(
                                 LineChartData(
-                                  // --- Touch Data (Enabled and configured) ---
                                   lineTouchData: LineTouchData(
-                                    enabled: true, // Enable touch
+                                    enabled: true,
                                     touchCallback: (
                                       FlTouchEvent event,
                                       LineTouchResponse? touchResponse,
@@ -111,14 +101,10 @@ class _ChartScreenState extends State<ChartScreen> {
                                             touchResponse
                                                 .lineBarSpots!
                                                 .isNotEmpty) {
-                                          // Get the first touched spot
-                                        } else {
-                                          // Reset if not touching
-                                        }
+                                        } else {}
                                       });
                                     },
                                     touchTooltipData: LineTouchTooltipData(
-                                      // tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
                                       getTooltipItems: (
                                         List<LineBarSpot> touchedSpots,
                                       ) {
@@ -129,7 +115,7 @@ class _ChartScreenState extends State<ChartScreen> {
                                               touchedSpot.spotIndex;
                                           if (index < 0 ||
                                               index >= entries.length) {
-                                            return null; // Invalid index
+                                            return null;
                                           }
                                           final date = entries[index].date;
                                           final buyRate =
@@ -139,13 +125,11 @@ class _ChartScreenState extends State<ChartScreen> {
 
                                           String text;
                                           if (touchedSpot.barIndex == 0) {
-                                            // Assuming index 0 is Buy Rate
                                             text =
-                                                'Buy: ${buyRate.toStringAsFixed(2)}';
+                                                '${AppStrings.buy}${buyRate.toStringAsFixed(2)}';
                                           } else {
-                                            // Assuming index 1 is Sell Rate
                                             text =
-                                                'Sell: ${sellRate.toStringAsFixed(2)}';
+                                                '${AppStrings.sell}${sellRate.toStringAsFixed(2)}';
                                           }
 
                                           return LineTooltipItem(
@@ -181,7 +165,7 @@ class _ChartScreenState extends State<ChartScreen> {
                                             ) {
                                               return FlDotCirclePainter(
                                                 radius: 4,
-                                                // color: barData.color,
+
                                                 strokeWidth: 2,
                                                 strokeColor: Colors.white,
                                               );
@@ -191,7 +175,7 @@ class _ChartScreenState extends State<ChartScreen> {
                                       }).toList();
                                     },
                                   ),
-                                  // --- Grid Data ---
+
                                   gridData: FlGridData(
                                     show: true,
                                     drawVerticalLine: true,
@@ -210,7 +194,7 @@ class _ChartScreenState extends State<ChartScreen> {
                                       );
                                     },
                                   ),
-                                  // --- Titles Data (Axes Labels) ---
+
                                   titlesData: FlTitlesData(
                                     show: true,
                                     rightTitles: const AxisTitles(
@@ -311,7 +295,7 @@ class _ChartScreenState extends State<ChartScreen> {
                                       ),
                                     ),
                                   ),
-                                  // --- Border Data ---
+
                                   borderData: FlBorderData(
                                     show: true,
                                     border: Border.all(
@@ -319,7 +303,7 @@ class _ChartScreenState extends State<ChartScreen> {
                                       width: 1,
                                     ),
                                   ),
-                                  // --- Line Bars Data (Buy and Sell Lines) ---
+
                                   lineBarsData: [
                                     LineChartBarData(
                                       spots:
@@ -360,7 +344,7 @@ class _ChartScreenState extends State<ChartScreen> {
                                       belowBarData: BarAreaData(show: false),
                                     ),
                                   ],
-                                  // --- Axis Bounds ---
+
                                   minX: 0,
                                   maxX:
                                       (entries.isNotEmpty
@@ -377,15 +361,14 @@ class _ChartScreenState extends State<ChartScreen> {
                       ),
             ),
 
-            // --- Legend ---
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _buildLegendItem(Colors.amber, 'Buy Rate'),
+                  _buildLegendItem(Colors.amber, AppStrings.buyRate),
                   const SizedBox(width: 30),
-                  _buildLegendItem(Colors.blueAccent, 'Sell Rate'),
+                  _buildLegendItem(Colors.blueAccent, AppStrings.sellRate),
                 ],
               ),
             ),

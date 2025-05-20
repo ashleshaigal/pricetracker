@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:pricetracker/util/strings.dart';
 import 'package:pricetracker/viewmodel/gold_rate_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class DateRangeFilter extends StatelessWidget {
   const DateRangeFilter({super.key});
 
-  // Function to show the custom range slider bottom sheet
   void _showCustomRangeSlider(
     BuildContext context,
     GoldRateViewModel viewModel,
   ) {
-    double sliderValue =
-        viewModel.days.toDouble(); // Initialize with current days
+    double sliderValue = viewModel.days.toDouble();
 
     showModalBottomSheet(
       context: context,
@@ -24,7 +23,7 @@ class DateRangeFilter extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Text(
-                    'Select Custom Date Range (Days)',
+                    AppStrings.dateRange,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   Slider(
@@ -37,18 +36,11 @@ class DateRangeFilter extends StatelessWidget {
                         (value) => setModalState(() => sliderValue = value),
                     onChangeEnd: (value) {
                       viewModel.setDays(value.toInt());
-                      Navigator.pop(context); // Close the slider bottom sheet
+                      Navigator.pop(context);
                     },
                   ),
-                  Text('${sliderValue.toInt()} days selected'),
-                  const SizedBox(height: 20), // Add some spacing
-                  ElevatedButton(
-                    onPressed: () {
-                      viewModel.setDays(sliderValue.toInt());
-                      Navigator.pop(context); // Close the slider bottom sheet
-                    },
-                    child: const Text('Apply'),
-                  ),
+                  Text('${sliderValue.toInt()} ${AppStrings.daysSelected}'),
+                  const SizedBox(height: 20),
                 ],
               ),
             );
@@ -62,7 +54,6 @@ class DateRangeFilter extends StatelessWidget {
   Widget build(BuildContext context) {
     final viewModel = Provider.of<GoldRateViewModel>(context);
 
-    // Function to show the main date range selection bottom sheet (fixed options)
     void showDateRangeOptions() {
       showModalBottomSheet(
         context: context,
@@ -72,44 +63,38 @@ class DateRangeFilter extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                // crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Select Date Range'),
+                  Text(AppStrings.selectDateRange),
                   Divider(),
                   ListTile(
-                    title: const Text('Last 7 Days'),
+                    title: const Text(AppStrings.last7Days),
                     onTap: () {
                       viewModel.setDays(7);
-                      Navigator.pop(context); // Close the options bottom sheet
+                      Navigator.pop(context);
                     },
                   ),
                   ListTile(
-                    title: const Text('Last 30 Days'),
+                    title: const Text(AppStrings.last30Days),
                     onTap: () {
                       viewModel.setDays(30);
-                      Navigator.pop(context); // Close the options bottom sheet
+                      Navigator.pop(context);
                     },
                   ),
                   ListTile(
-                    title: const Text('Last 365 Days'),
+                    title: const Text(AppStrings.last365Days),
                     onTap: () {
                       viewModel.setDays(365);
-                      Navigator.pop(context); // Close the options bottom sheet
+                      Navigator.pop(context);
                     },
                   ),
                   ListTile(
-                    title: const Text('Custom'),
+                    title: const Text(AppStrings.custom),
                     onTap: () {
-                      Navigator.pop(
-                        context,
-                      ); // Close the options bottom sheet first
-                      _showCustomRangeSlider(
-                        context,
-                        viewModel,
-                      ); // Then show the slider
+                      Navigator.pop(context);
+                      _showCustomRangeSlider(context, viewModel);
                     },
                   ),
-                  const SizedBox(height: 10), // Add some bottom padding
+                  const SizedBox(height: 10),
                 ],
               ),
             ),
@@ -119,8 +104,7 @@ class DateRangeFilter extends StatelessWidget {
     }
 
     return OutlinedButton(
-      onPressed:
-          showDateRangeOptions, // Call the function to show the options list
+      onPressed: showDateRangeOptions,
       style: OutlinedButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
@@ -128,12 +112,12 @@ class DateRangeFilter extends StatelessWidget {
       ),
       child: Text(
         viewModel.days == 7
-            ? 'Last 7 Days'
+            ? AppStrings.last7Days
             : viewModel.days == 30
-            ? 'Last 30 Days'
+            ? AppStrings.last30Days
             : viewModel.days == 365
-            ? 'Last 365 Days'
-            : 'Custom (${viewModel.days} Days)', // Indicate custom selected days
+            ? AppStrings.last365Days
+            : '${AppStrings.custom} (${viewModel.days} Days)',
         style: const TextStyle(color: Colors.black87),
       ),
     );

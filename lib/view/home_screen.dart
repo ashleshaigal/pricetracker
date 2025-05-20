@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pricetracker/util/strings.dart';
 import 'package:provider/provider.dart';
 import '../viewmodel/gold_rate_viewmodel.dart';
 import 'components/gold_card.dart';
@@ -12,19 +13,19 @@ class HomeScreen extends StatelessWidget {
     final viewModel = Provider.of<GoldRateViewModel>(context);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F6F1), // Consistent background
+      backgroundColor: const Color(0xFFF9F6F1),
       appBar: AppBar(
         backgroundColor: const Color(0xFFF9F6F1),
         elevation: 0,
         title: const Text(
-          'Gold Price Tracker',
+          AppStrings.title,
           style: TextStyle(
             fontSize: 26,
             fontWeight: FontWeight.bold,
             color: Colors.black,
           ),
         ),
-        centerTitle: false, // Align title to left
+        centerTitle: false, 
       ),
       body: SafeArea(
         child: Column(
@@ -35,14 +36,14 @@ class HomeScreen extends StatelessWidget {
             ),
 
             Expanded(
-              // Use Expanded to fill remaining vertical space
+             
               child:
                   viewModel.isLoading
                       ? const Center(child: CircularProgressIndicator())
                       : viewModel.entries.isEmpty
                       ? const Center(
                         child: Text(
-                          'No data available for the selected range or metal type.\nTry adjusting filters.',
+                          AppStrings.noData,
                           style: TextStyle(color: Colors.grey, fontSize: 16),
                           textAlign: TextAlign.center,
                         ),
@@ -50,7 +51,7 @@ class HomeScreen extends StatelessWidget {
                       : ListView.builder(
                         padding: const EdgeInsets.symmetric(
                           vertical: 8,
-                        ), // Padding for the list itself
+                        ), 
                         itemCount: viewModel.entries.length,
                         itemBuilder: (context, index) {
                           final entry = viewModel.entries[index];

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pricetracker/util/chart_data_processor.dart';
+import 'package:pricetracker/util/strings.dart';
 import '../data/model/gold_rate_entry.dart';
 import '../data/service/gold_rate_service.dart';
 
@@ -8,7 +9,7 @@ class GoldRateViewModel extends ChangeNotifier {
 
   GoldRateViewModel(this._goldRateService);
 
-  String _metalType = 'gold';
+  String _metalType = AppStrings.goldValue;
   int _days = 365;
   List<GoldRateEntry> _entries = [];
   bool isLoading = false;
@@ -29,7 +30,7 @@ class GoldRateViewModel extends ChangeNotifier {
       _entries = data.result.goldSilverRates;
     } catch (e) {
       _entries = [];
-      errorMessage = 'Failed to load data';
+      errorMessage = AppStrings.failed;
     }
 
     isLoading = false;
@@ -42,7 +43,7 @@ class GoldRateViewModel extends ChangeNotifier {
   }
 
   void setDays(int newDays) {
-    _days = newDays != 0 ? newDays + 1 : newDays;
+    _days = newDays;
     fetchGoldRates();
   }
 

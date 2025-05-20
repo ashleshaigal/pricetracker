@@ -1,5 +1,5 @@
-// lib/view/dashboard_screen.dart
 import 'package:flutter/material.dart';
+import 'package:pricetracker/util/strings.dart';
 import 'package:pricetracker/view/chart_screen.dart';
 import 'package:pricetracker/view/home_screen.dart';
 import 'package:pricetracker/view/settings_screen.dart';
@@ -52,17 +52,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
               BottomNavigationBarItem(
                 icon: Icon(Icons.home_outlined),
                 activeIcon: Icon(Icons.home),
-                label: 'Home',
+                label: AppStrings.home,
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.bar_chart_outlined),
                 activeIcon: Icon(Icons.bar_chart),
-                label: 'Chart',
+                label: AppStrings.chart,
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.settings_outlined),
                 activeIcon: Icon(Icons.settings),
-                label: 'Settings',
+                label: AppStrings.settings,
               ),
             ],
           ),

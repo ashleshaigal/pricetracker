@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pricetracker/util/strings.dart';
 import 'package:pricetracker/viewmodel/gold_rate_viewmodel.dart';
 import '../../data/model/gold_rate_entry.dart';
 import 'package:intl/intl.dart';
@@ -11,19 +12,15 @@ class GoldCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formattedDate = DateFormat('MMM dd, yyyy').format(entry.date);
-    final viewModel = Provider.of<GoldRateViewModel>(
-      context,
-      listen: false,
-    ); // Get the ViewModel
+    final viewModel = Provider.of<GoldRateViewModel>(context, listen: false);
 
-    // Determine the icon color based on metalType
     Color iconColor;
-    if (viewModel.metalType == 'gold') {
-      iconColor = const Color(0xFFFFD700); // Gold color
-    } else if (viewModel.metalType == 'silver') {
-      iconColor = const Color(0xFFC0C0C0); // Silver color
+    if (viewModel.metalType == AppStrings.goldValue) {
+      iconColor = const Color(0xFFFFD700);
+    } else if (viewModel.metalType == AppStrings.silverValue) {
+      iconColor = const Color(0xFFC0C0C0);
     } else {
-      iconColor = Colors.grey; // Default or fallback color
+      iconColor = Colors.grey;
     }
 
     return Card(
@@ -43,10 +40,9 @@ class GoldCard extends StatelessWidget {
                       Icon(Icons.diamond, color: iconColor, size: 24),
                       const SizedBox(width: 8),
                       Text(
-                        // Use the metalType from the ViewModel
-                        viewModel.metalType == 'gold'
-                            ? 'Gold'
-                            : 'Silver', //Simplified.
+                        viewModel.metalType == AppStrings.goldValue
+                            ? AppStrings.gold
+                            : AppStrings.silver,
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -67,7 +63,7 @@ class GoldCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  'Buy: ₹${entry.buyRate.toStringAsFixed(2)}/g',
+                  '${AppStrings.buy}${entry.buyRate.toStringAsFixed(2)}${AppStrings.gram}',
                   style: const TextStyle(
                     fontSize: 14,
                     color: Colors.black,
@@ -76,7 +72,7 @@ class GoldCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Sell: ₹${entry.sellRate.toStringAsFixed(2)}/g',
+                  '${AppStrings.sell}${entry.sellRate.toStringAsFixed(2)}${AppStrings.gram}',
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.grey[700],

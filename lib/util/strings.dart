@@ -1,7 +1,6 @@
 class AppStrings {
   static const String title = 'Gold Price Tracker';
-  static const String noData =
-      'No data available for the selected range or metal type.\nTry adjusting filters.';
+  static const String noData = 'No Data Found';
   static const String failed = 'Failed to load data';
 
   //BottomBar
